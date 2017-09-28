@@ -7,18 +7,19 @@ const port = process.env.PORT || 3000
 const logger = require('morgan')
 // using the middleware to display http request information
 app.use(logger('dev'))
-
+// set our view engine
+app.set('view engine', 'ejs')
 // http methods GET, POST, PUT/PATCH , DELETE
-app.get('/', (req, res) => {
+app.get('', (req, res) => {
   // send the view to the client
-  res.send(`<h2> Welcome to my express app </h2>`)
+  res.render('index')
 })
 app.post('/', (req, res) => {
   res.json({message: 'you sent a post request to my home page'})
 })
 // make a new route that is a GET request to /about
 app.get('/about', (req, res) => {
-  res.json({message: 'you reached my about page json', status: 200, author: 'toneloke'})
+  res.render('about')
 })
 // this is custom middleware that run only before my artist URL
 app.use((req, res, next) => {
@@ -29,9 +30,7 @@ app.get('/artist/album', (req, res) => {
   res.send('some album')
 })
 app.get('/artist/:name', (req, res) => {
-  console.log(req.params.name)
-  let htmlDisplay = `<h3>Artist: ${req.params.name}</h3>`
-  res.send(htmlDisplay)
+  res.render('artist', {artistName: req.params.name})
 })
 
 app.listen(port, (err) => {
